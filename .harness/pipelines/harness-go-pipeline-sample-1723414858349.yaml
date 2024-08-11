@@ -14,11 +14,39 @@ pipeline:
             steps:
               - step:
                   type: Run
-                  name: Echo Welcome Message
+                  name: Run Unit Tests
                   identifier: Echo_Welcome_Message
                   spec:
+                    connectorRef: account.DockerHubAccess
+                    image: golang:1.15
                     shell: Sh
-                    command: echo "Welcome to Harness CI"
+                    command: |-
+                      set *e
+                      go get gotest.tools/gotestsum
+                      gotestsum --format=standard-verbose --junitfile unit-tests.xml
+                      exit
+              - step:
+                  type: Run
+                  name: Build Application
+                  identifier: Build_Application
+                  spec:
+                    connectorRef: account.DockerHubAccess
+                    image: golang:1.15
+                    shell: Sh
+                    command: |-
+                      set *e
+                      goget gotest.tools/gotestsum
+                      CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -tags netgo
+                      exit 0
+              - step:
+                  type: BuildAndPushDockerRegistry
+                  name: BuildAndPushDockerRegistry_Go
+                  identifier: BuildAndPushDockerRegistry_Go
+                  spec:
+                    connectorRef: account.DockerHubAccess
+                    repo: rmettadocker/harnessexercise
+                    tags:
+                      - latestGo
           platform:
             os: Linux
             arch: Amd64
