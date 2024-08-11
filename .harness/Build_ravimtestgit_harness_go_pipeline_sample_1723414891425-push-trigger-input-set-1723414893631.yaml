@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_ravimtestgit_harness_go_pipeline_sample_1723414891425-push-trigger-input-set
+  identifier: Build_ravimtestgit_harness_go_pipeline_sample_1723414891425pushtriggerinputset
+  orgIdentifier: default
+  projectIdentifier: raviexercise
+  pipeline:
+    identifier: Build_ravimtestgit_harness_go_pipeline_sample_1723414891425
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>
